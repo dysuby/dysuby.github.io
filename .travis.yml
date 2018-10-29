@@ -2,7 +2,8 @@
 language: node_js
 
 # node版本
-node_js: stable
+node_js: 
+  - 10.12.0
 
 # 设置只监听哪个分支
 branches:
@@ -29,9 +30,8 @@ script:
   - hexo clean
   - hexo generate
 
-# 设置git提交名，邮箱；替换真实token到_config.yml文件，最后depoy部署
 after_script:
-  # 替换同目录下的 _config.yml 文件中 gh_token 字符串为travis后台刚才配置的变量，注意此处sed命令用了双引号。单引号无效！
+  # 替换同目录下的 _config.yml 文件中 REPO_TOKEN 字符串
   - sed -i "s/REPO_TOKEN/${REPO_TOKEN}/g" ./_config.yml
   - hexo deploy
 
