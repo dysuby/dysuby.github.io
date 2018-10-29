@@ -79,7 +79,8 @@ theme: minos
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:vegchic/vegchic.github.io.git
+  repo: https://REPO_TOKEN@github.com/xiong-it/xiong-it.github.io.git
+  branch: master
 
 toc: 
   maxdepth: 3
