@@ -2,9 +2,8 @@
 layout: post
 title: Canny 边缘检测
 date: 2018-10-17
-categories: algorithm
+categories: computer vision
 tags: [homework,computer vision,note,canny]
-
 ---
 
 计算机视觉的作业，虽然完成的不好，但是还是记录下8。
