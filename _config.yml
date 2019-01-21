@@ -87,8 +87,5 @@ toc:
 
 # Comment
 comment:
-    type: gitment
-    owner: vegchic         # (required) GitHub user name
-    repo: vegchic.github.io          # (required) GitHub repository name
-    client_id: CLIENT_ID     # (required) OAuth application client id
-    client_secret: CLIENT_SECRET # (required) OAuth application client secret
+    type: disqus
+    shortname: vegchic-github-io     # (required)
