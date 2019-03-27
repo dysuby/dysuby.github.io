@@ -2,9 +2,8 @@
 layout: post
 title: 字节跳动 & CVTE 面（凉）经
 date: 2019-3-8
-categories: algorithm
+categories: interview
 tags: [interview]
-
 ---
 
 
