@@ -103,19 +103,17 @@ int main() {
 
 用图表示如下：
 
-![](/images/go gc/mark_sweep_1.png)
+![](/images/go gc/mark_sweep_5.png)
 
-![](/images/go gc/mark_sweep_2.png)
+![](/images/go gc/mark_sweep_6.png)
 
-![](/images/go gc/mark_sweep_3.png)
+![](/images/go gc/mark_sweep_7.png)
 
-![](/images/go gc/mark_sweep_4.png)
+![](/images/go gc/mark_sweep_8.png)
 
+![](/images/go gc/mark_sweep_9.png)
 
-
-**优点：**
-
-- 用户程序可以和 mark 并发执行
+![](/images/go gc/mark_sweep_10.png)
 
 
 
@@ -136,7 +134,7 @@ int main() {
 
 
 
-上图便是 Golang 的 GC 流程，可以看到，STW 只有 GC 开始时和 Re-scan（更新写屏障监视到的修改） 时出现。
+上图便是 Golang 的 GC 流程，可以看到，STW 只有 GC 开始时和 Re-scan（更新写屏障监视到的修改） 时出现，优化了性能。
 
 
 
@@ -156,4 +154,3 @@ int main() {
 [图解Golang的GC算法](https://i6448038.github.io/2019/03/04/golang-garbage-collector/)
 
 [Golang 垃圾回收剖析](http://legendtkl.com/2017/04/28/golang-gc/)
-
