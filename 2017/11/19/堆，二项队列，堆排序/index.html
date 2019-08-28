@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>堆，二项队列，堆排序 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            堆，二项队列，堆排序
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2017-11-19T00:00:00.000Z" itemprop="datePublished">11月 19 2017</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/ds/">ds</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            13 分钟 读完 (约 2012 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <h2><span id="前言">前言</span></h2><p>从堆到二项队列到堆排序….当然都只是简单的堆。</p>
+<a id="more"></a> 
+<h2><span id="二叉堆binary-heap">二叉堆(Binary Heap)</span></h2><p><strong>堆</strong>也称<strong>优先队列</strong>，堆中的每个元素都有自己的权重，出堆操作会将 <strong>权重最小(或者最大)</strong> 的元素弹出。</p>
+<p>二叉堆使用树来实现，<strong>树的根即堆顶，对于树的每一个节点，父亲的权重必然小于儿子的权重</strong>。下图即为一个堆(别问我为什么这么丑。。</p>
+<p><img src="\images\heap\image.png" alt="堆"></p>
+<p>但实际上并不需要使用树来储存，可以用数组来实现，故而上图中实际上为(别问丑。。</p>
+<p><img src="\images\heap\real.png" alt="堆在内存中"></p>
+<p>从上往下从左往右顺序存储在数组中。这种存储方式的性质为：<strong><code>heap[i]</code>的儿子为<code>heap[2*i]</code>和<code>heap[2*i+1]</code>(<code>i</code>从1开始，且儿子存在)</strong>，称为<strong>堆序性(<em>heap order</em>)</strong></p>
+<hr>
+<h3><span id="push">push</span></h3><p>插入一个元素时，首先会找到数组的下一个空闲位置，将新元素放进去。然后，为了保持堆序性，将这个元素沿着其到根的路<strong>上滤(<em>percolate up</em>)</strong>，具体来说，便是<code>swap(parent, child)</code>，直到该位置能保持堆序性(此时元素的两个儿子都大于它)。</p>
+<hr>
+<h3><span id="pop">pop</span></h3><p>弹出一个元素时，由于<strong>根即是最小元</strong>，所以弹出它。但是为了填充这个空穴，需要将它<strong>下滤(<em>percolate down</em>)</strong>，具体来说，便是将最后一个元素<code>heap[size]</code>放进这个空穴中(为什么不是<code>size-1</code>见下文)，然后<code>swap(blank, less)</code>，将空穴<code>blank</code>与其儿子中的较小者<code>less</code>交换，直到空穴的儿子都比它大。</p>
+<hr>
+<h3><span id="实现">实现</span></h3><p>为了方便，将一个哑元(该哑元小于任何元素)放入<code>heap[0]</code>中，这样上滤一个最小元时便能因为<code>heap[1]&gt;heap[1/2]</code>而停止上滤。故而堆的下标应该从1开始。</p>
+<p>具体源码不再放出，具体见<a href="https://github.com/vegchic/learn-ds/blob/master/heap.cpp" target="_blank" rel="noopener">vegchic/learn-ds/heap.cpp</a>，其中<code>main()</code>为测试函数</p>
+<hr>
+<h2><span id="二项队列binary-queue">二项队列(Binary Queue)</span></h2><p>普通二叉堆有一个弊端，合并困难(代价大)，故而需要更好的结构构建堆，书中讲述了左堆，斜堆，二项队列，这里实现了第三个(为啥不写左堆和斜堆呢，因为我忙(lan)啊</p>
+<p>二项队列同样用树实现，但不同的是，它是树的集合，森林(forest)。里面的每一棵树也并非普通二叉树，而是<strong>二项树(binary tree)</strong>。在二项队列中，每一棵树的高度都不一样，<strong>高度为$k$的二项树由两棵高度为$k-1$的树合并而来，高度为$0$的树是一棵单节点树</strong>。</p>
+<p><img src="\images\heap\btree.png" alt="BTree"></p>
+<p>图即为$B_0, B_1, B_2, B_3$</p>
+<p>实现时对每个节点结构，应有两个指针，一个指向儿子，一个指向兄弟。</p>
+<p><img src="\images\heap\btree2.png" alt="btree"></p>
+<p>容易看出，任意的$N$都可以用2的幂相加得到(可看作二进制数)，所以二项队列可以表示任意堆。</p>
+<hr>
+<h3><span id="push">push</span></h3><p>由于二项队列核心是<strong>合并(<em>Merge</em>)</strong>，所以插入可以看做是<code>size=1</code>的二项队列与被插入队列合并。</p>
+<hr>
+<h3><span id="pop">pop</span></h3><p>弹出时，应该遍历每一棵树的根，找出最小元所在的树(与二叉堆一样，每一棵树的最小元依然是根)，然后去掉该最小元，它的儿子便可以分成若干树，再将这些树合成一个新的二项队列，与原队列合并即可。</p>
+<hr>
+<h3><span id="merge">Merge</span></h3><p>两个二项队列的合并操作归根到底是合并两棵相同高度的树，知道队列中不存在相同高度的树即可，这就好像二进制数的加法一样，每一位不是1就是0，如果两个1相加，就要往前面进位。所以在实现时也体现了进位的思想。</p>
+<p>而相同高度的树合并，为了使根依然为最小元，所以将根小的作为母树，根大的作为子树附上去(这棵子树是根的第一个儿子，所以要把原先的儿子的地址添加到该子树的根的兄弟指针上)</p>
+<hr>
+<h3><span id="类实现">类实现</span></h3><p>在合并中，<code>!!T1</code>是当T1不为空时值为1，为空时值为0的表达式（可以说又让我这个菜鸡大开眼界了。另外，宏定义中<code>MIN</code>实际上是<code>int</code>类型的最大值，不过因为是用在找最小元上，所以就这样取名了(其实是因为<code>MAX</code>已经被占了，懒得改了</p>
+<h3><span id="src">src</span></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX (32)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MIN (~0 ^ (1 &lt;&lt; 31))</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">binaryQueue</span> &#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></span><br><span class="line">      <span class="keyword">int</span> ele;</span><br><span class="line">      node *sibling;</span><br><span class="line">      node *child;</span><br><span class="line">      node(<span class="keyword">int</span> i, node* s = <span class="number">0</span>, node* c = <span class="number">0</span>): ele(i), sibling(s), child(c) &#123;&#125;</span><br><span class="line">      ~node() &#123;</span><br><span class="line">        <span class="keyword">if</span> (sibling)</span><br><span class="line">          <span class="keyword">delete</span> sibling;</span><br><span class="line">        <span class="keyword">if</span> (child)</span><br><span class="line">          <span class="keyword">delete</span> child;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> _size;</span><br><span class="line">    node* roots[MAX];</span><br><span class="line"></span><br><span class="line">    <span class="function">node* <span class="title">mergeSame</span><span class="params">(node *left, node *right)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (right -&gt; ele &lt; left -&gt; ele)</span><br><span class="line">        <span class="keyword">return</span> mergeSame(right, left);</span><br><span class="line">      right -&gt; sibling = left -&gt; child;</span><br><span class="line">      left -&gt; child = right;</span><br><span class="line">      <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    binaryQueue(): _size(<span class="number">0</span>) &#123;</span><br><span class="line">      <span class="built_in">memset</span>(roots, <span class="number">0</span>, MAX * <span class="keyword">sizeof</span>(binaryQueue*));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~binaryQueue() &#123;</span><br><span class="line">      clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">binaryQueue&amp; <span class="title">push</span><span class="params">(<span class="keyword">int</span> e)</span> </span>&#123;</span><br><span class="line">      node *newNode = <span class="keyword">new</span> node(e);</span><br><span class="line">      binaryQueue temp;</span><br><span class="line">      temp.roots[<span class="number">0</span>] = newNode;</span><br><span class="line">      ++temp._size;</span><br><span class="line">      merge(temp);</span><br><span class="line">      <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">binaryQueue&amp; <span class="title">merge</span><span class="params">(binaryQueue &amp;heap)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (heap._size + <span class="keyword">this</span> -&gt; _size &gt; MIN) &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Error!"</span>;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      node *T1(0), *T2(0), *carry(0);</span><br><span class="line">      int i(0), j(1);</span><br><span class="line">      _size += heap._size;</span><br><span class="line">      <span class="keyword">for</span> ( ; j &lt;= _size; j *= <span class="number">2</span>, ++i) &#123;</span><br><span class="line">        T1 = roots[i], T2 = heap.roots[i];</span><br><span class="line">        <span class="keyword">switch</span>(!!T1 + !!T2 * <span class="number">2</span> + !!carry * <span class="number">4</span>) &#123;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">//no trees</span></span><br><span class="line">          <span class="keyword">case</span> <span class="number">1</span>: <span class="comment">//only T1</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">2</span>: <span class="comment">//only T2</span></span><br><span class="line">            roots[i] = T2;</span><br><span class="line">            heap.roots[i] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">3</span>: <span class="comment">//T1 and T2</span></span><br><span class="line">            carry = mergeSame(T1, T2);</span><br><span class="line">            roots[i] = <span class="number">0</span>;</span><br><span class="line">            heap.roots[i] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">4</span>: <span class="comment">//only carry</span></span><br><span class="line">            roots[i] = carry;</span><br><span class="line">            carry = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">5</span>: <span class="comment">//T1 and carry</span></span><br><span class="line">            carry = mergeSame(T1, carry);</span><br><span class="line">            roots[i] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">6</span>: <span class="comment">//T2 and carry</span></span><br><span class="line">            carry = mergeSame(T2, carry);</span><br><span class="line">            heap.roots[i] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">          <span class="keyword">case</span> <span class="number">7</span>: <span class="comment">//all</span></span><br><span class="line">            roots[i] = carry;</span><br><span class="line">            carry = mergeSame(T1, T2);</span><br><span class="line">            heap.roots[i] = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (_size == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">      <span class="keyword">int</span> index = <span class="number">0</span>, min = MIN; </span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>; j &lt;= _size; ++i, j *= <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">if</span> (roots[i] &amp;&amp; roots[i] -&gt; ele &lt; min) &#123;</span><br><span class="line">          index = i;</span><br><span class="line">          min = roots[i] -&gt; ele;</span><br><span class="line">        &#125;</span><br><span class="line">      node *deletedNode = roots[index];</span><br><span class="line">      node *children = roots[index] -&gt; child;</span><br><span class="line">      roots[index] -&gt; child = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">delete</span> roots[index];</span><br><span class="line">      roots[index] = <span class="number">0</span>;</span><br><span class="line">      binaryQueue deletedHeap;</span><br><span class="line">      deletedHeap._size = (<span class="number">1</span> &lt;&lt; index) - <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = index - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">        deletedHeap.roots[i] = children;</span><br><span class="line">        children = children -&gt; sibling;</span><br><span class="line">        deletedHeap.roots[i] -&gt; sibling = <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      roots[index] = <span class="number">0</span>;</span><br><span class="line">      _size -= (deletedHeap._size + <span class="number">1</span>);</span><br><span class="line">      merge(deletedHeap);</span><br><span class="line">      <span class="keyword">return</span> min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> _size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>; j &lt;= _size; j *= <span class="number">2</span>, ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (roots[i])</span><br><span class="line">          <span class="keyword">delete</span> roots[i];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (_size == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">      <span class="keyword">int</span> index = <span class="number">0</span>, min = MIN; </span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">1</span>; j &lt;= _size; ++i, j *= <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">if</span> (roots[i] &amp;&amp; roots[i] -&gt; ele &lt; min) &#123;</span><br><span class="line">          index = i;</span><br><span class="line">          min = roots[i] -&gt; ele;</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="keyword">return</span> min;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2><span id="测试">测试</span></h2><p>自己测了一下，貌似没问题，然后就去leetcode随便找了道题做了下 <a href="https://leetcode.com/problems/merge-k-sorted-lists/description/" target="_blank" rel="noopener">leetcode23</a><br><img src="\images\heap\leetcode.png" alt="leetcode23"></p>
+<p>时间有点慢。。因为要测试<code>Merge()</code>所以没想太多直接写了(说得好像想了就能快一样。顺便贴下Solution<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ListNode* <span class="title">mergeKLists</span><span class="params">(<span class="built_in">vector</span>&lt;ListNode*&gt;&amp; lists)</span> </span>&#123;</span><br><span class="line">        binaryQueue h;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; lists.size(); ++i) &#123;</span><br><span class="line">          binaryQueue tempHeap;</span><br><span class="line">          ListNode* temp = lists[i];</span><br><span class="line">          <span class="keyword">while</span> (temp) &#123;</span><br><span class="line">            tempHeap.push(temp -&gt; val);</span><br><span class="line">            temp = temp -&gt; next;</span><br><span class="line">          &#125;</span><br><span class="line">          h.merge(tempHeap);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (h.size() == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        ListNode* res = <span class="keyword">new</span> ListNode(h.pop());</span><br><span class="line">        ListNode* temp = res;</span><br><span class="line">        <span class="keyword">while</span> (h.size() != <span class="number">0</span>) &#123;</span><br><span class="line">          temp -&gt; next = <span class="keyword">new</span> ListNode(h.pop());</span><br><span class="line">          temp = temp -&gt; next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2><span id="堆排序onlog-n">堆排序($O(N\log N)$)</span></h2><p>因为堆的特殊性质，便可以将之用于排序，对N个元素首先构建堆然后进行N次<code>pop()</code>操作。也可以用于解决选择问题（找出第几大的数。</p>
+<p>如果使用一个额外的数组存储<code>pop()</code>的返回值，虽然不会显著增加运行时间，但会增加额外空间消耗。</p>
+<p>因为每次<code>pop()</code>都会使数组$size-1$，所以可以将返回值放在堆尾，如果使用普通堆，得到的将是递减的数组，所以这里使用 <strong>(max)堆</strong> (即每次都会弹出最大元)</p>
+<hr>
+<h3><span id="src">src</span></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> leftChild(i) ((i) * 2 + 1)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">heapSort</span> &#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">down</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr, <span class="keyword">int</span> index, <span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> ele = arr[index], child(<span class="number">0</span>);</span><br><span class="line">      <span class="keyword">for</span> ( ; leftChild(index) &lt; size; index = child) &#123;</span><br><span class="line">        child = leftChild(index);</span><br><span class="line">        <span class="keyword">if</span> (child + <span class="number">1</span> &lt; size &amp;&amp; arr[child] &lt; arr[child + <span class="number">1</span>])</span><br><span class="line">          ++child;</span><br><span class="line">        <span class="keyword">if</span> (arr[child] &gt; ele)</span><br><span class="line">          arr[index] = arr[child];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      arr[child] = ele;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; sort(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr) &#123;</span><br><span class="line">      <span class="keyword">if</span> (arr.size() == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> arr;</span><br><span class="line">      <span class="keyword">int</span> size = arr.size();</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> index = size / <span class="number">2</span>; index &gt;= <span class="number">0</span>; --index)</span><br><span class="line">        down(arr, index, size);</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> index = size - <span class="number">1</span>; index &gt; <span class="number">0</span>; --index) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp = arr[<span class="number">0</span>];</span><br><span class="line">        arr[<span class="number">0</span>] = arr[index];</span><br><span class="line">        arr[index] = temp;</span><br><span class="line">        down(arr, <span class="number">0</span>, index);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> arr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3><span id="reference">Reference</span></h3><p>雷打不动的《数据结构》以及<a href="https://www.cnblogs.com/Dadio/p/5513874.html" target="_blank" rel="noopener">Dadio</a></p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/algorithm/">#algorithm</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/sort/">#sort</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/heap/">#heap</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2017/11/24/谈谈对Promise的小理解/">谈谈对Promise的小理解</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2017/11/13/排序II 归并排序与快速排序/">排序II 归并排序与快速排序</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2017/11/19/堆，二项队列，堆排序/';
+        this.page.identifier = '2017/11/19/堆，二项队列，堆排序/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

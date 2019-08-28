@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>CFLP 两种解题算法 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            CFLP 两种解题算法
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2018-12-22T00:00:00.000Z" itemprop="datePublished">12月 22 2018</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/algorithm/">algorithm</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            8 分钟 读完 (约 1266 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <p>代码和结果可以在 <a href="https://github.com/vegchic/CFLPsolver" target="_blank" rel="noopener">vegchic/CFLPsolver</a> 上找到</p>
+<h2><span id="capacitated-facility-location-problems">Capacitated Facility Location Problems</span></h2><p>现有客人 $n$ 位，工厂 $m$ 座，每个客人都有自己的服务需求，每个工厂都能提供一定数量的服务，每个客人到每座工厂都需要一定的费用，工厂刚开始是关闭的，开工厂也要付出一定的费用。现在要求： <strong>求能满足所有客户的需求的最小代价分配方案</strong>。</p>
+<a id="more"></a>
+<p>以上问题可以用数学公式表达：</p>
+<p>$$y_i=\begin{cases}1&amp;\text{if facility }i\text{ is opened}\\ 0&amp;\text{otherwise}\end{cases}$$</p>
+<p>$$x_{ij}=\begin{cases}1&amp;\text{if facility }i\text{ serves customer }j\\ 0&amp;\text{otherwise}\end{cases}$$</p>
+<p>$$v^*=\min\sum^m_{i=1}\sum^n_{j=1}c_{ij}x_{ij}+\sum^m_{i=1}f_iy_i$$</p>
+<p>$$\text{s.t.}\ \sum_n^{j=1}a_jx_{ij}\le b_iy_i \ \forall i,$$</p>
+<p>$$\sum_{i=1}^mx_{ij}=1\ \forall j,$$</p>
+<p>$$x_{ij}-y_i\le0\ \forall i,j,$$</p>
+<p>$$x_{ij}\in{0,1}\ \forall i, j,$$</p>
+<p>$$y_i\in{0,1}\ \forall i,$$</p>
+<p>其中，$a_j$ 为第 $j$ 位顾客的需求，$b_i$ 为第 $i$ 座工厂的容量，$f_i$ 为开第 $i$ 座工厂的费用，$c_{ij}$ 为将第 $j$ 位顾客分配到 $i$</p>
+<p> 座工厂的费用。在实际编程中，我直接将 $x_{ij}$ 简化为 ${x_j}$。</p>
+<h3><span id="迭代贪心">迭代贪心</span></h3><p>可以使用贪心算法求一个近似解。算法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">for i from 0 to T /* T 为迭代次数 */</span><br><span class="line">	shuffle customer order</span><br><span class="line">	for c in customer</span><br><span class="line">		choose the closet avaliable facility f</span><br><span class="line">		if f is closed</span><br><span class="line">			open f</span><br><span class="line">			update solution</span><br><span class="line">		update solution</span><br><span class="line">	update optimal_solution</span><br></pre></td></tr></table></figure>
+<h4><span id="分析">分析</span></h4><p>可以看见，该算法并没有考虑开厂的费用，因为大部分开厂费用都比分配的费用要少。通过增加迭代打乱客户顺序，可以让解变得更好，而且写起来也比较简单，该算法优点是速度快，缺点是可能误差会比较大。经试验迭代次数 $T=10$ 最好。</p>
+<h4><span id="代码">代码</span></h4><p><a href="https://github.com/vegchic/CFLPsolver/blob/master/greedy.py" target="_blank" rel="noopener">greedy.py</a></p>
+<h4><span id="结果">结果</span></h4><p><a href="https://github.com/vegchic/CFLPsolver/blob/master/result/greedy_result.csv" target="_blank" rel="noopener">greedy_result.csv</a></p>
+<p><a href="https://github.com/vegchic/CFLPsolver/tree/master/result/greedy" target="_blank" rel="noopener">greedy_details</a></p>
+<h3><span id="模拟退火">模拟退火</span></h3><p>模拟退火也可以求一个近似解。通过按概率接受差解可以跳出局部最优解。算法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">generate the init solution</span><br><span class="line">optimal = init_solution</span><br><span class="line">while T &gt; tmin:</span><br><span class="line">	for i from 0 to times</span><br><span class="line">		new_solution = localsearch(solution)</span><br><span class="line">		delta = new_solution.cost - optimal.cost</span><br><span class="line">		if new_solution.cost &lt; optimal.cost or random() &lt; exp(-delta / T)</span><br><span class="line">			update optimal</span><br><span class="line">	drop T by t_rate</span><br></pre></td></tr></table></figure>
+<h4><span id="邻域算子">邻域算子</span></h4><ol>
+<li>随机交换两个顾客分配到的工厂：<ol>
+<li>初始化候选表，里面包含客户两两配对的所有情况。</li>
+<li>随机选择两个顾客。</li>
+<li>如果交换后不能满足约束，从候选表中移除这个组合，如果候选表为空，则返回当前解，否则转到 2。</li>
+<li>交换两个顾客分配到的工厂，更新 $x$ 和总费用。</li>
+</ol>
+</li>
+<li>随机将一个顾客移到另一个工厂：<ol>
+<li>初始化工厂的候选表和顾客的候选表。</li>
+<li>随机选择一个顾客。</li>
+<li>随机选择一个工厂。</li>
+<li>如果顾客不能转移到该工厂，则从工厂候选表中移除该工厂，如果工厂候选表不为空，转 3，如果为空，则从客户候选表中移除该客户，如果客户候选表不为空，转 2，否则返回当前解。</li>
+<li>将顾客转移并更新 $x$ 和总费用，如果转移后使顾客原来的工厂没有服务的顾客，则关闭该工厂并更新 $y$ 和总费用。</li>
+</ol>
+</li>
+<li>随机选择一个工厂，将其他工厂的顾客分配到它上直到达到其容量限制：<ol>
+<li>初始化工厂的候选表。</li>
+<li>随机选择一个工厂。</li>
+<li>如果工厂的剩余容量不能满足任意一位顾客（本来应该是其他工厂的顾客，这里做了简化）的需求，则从候选表中移除该工厂，如果不为空，转 2，否则返回当前解。</li>
+<li>打乱顾客顺序。并将能放进该工厂的顾客转移到该工厂，如果转移后使原来的工厂不再服务任何顾客，则关闭工厂，更新 $x​$，$y​$，还有总费用。</li>
+</ol>
+</li>
+</ol>
+<h4><span id="分析">分析</span></h4><p>模拟退火耗时比贪心长，但是可以找到更优解，在实验中参数取 $T=100,\ tmin=5,\ times=3000,\ trate=0.95$</p>
+<h4><span id="代码">代码</span></h4><p><a href="https://github.com/vegchic/CFLPsolver/blob/master/SA.py" target="_blank" rel="noopener">SA.py</a></p>
+<h4><span id="结果">结果</span></h4><p><a href="https://github.com/vegchic/CFLPsolver/blob/master/result/sa_result.csv" target="_blank" rel="noopener">sa_result.csv</a></p>
+<p><a href="https://github.com/vegchic/CFLPsolver/tree/master/result/sa" target="_blank" rel="noopener">sa_details</a></p>
+<h3><span id="对比">对比</span></h3><p>自己写了个 <a href="https://github.com/vegchic/CFLPsolver/blob/master/compare.py" target="_blank" rel="noopener">compare.py</a>，比较了下模拟退火和贪心（将退火花费的时间和解的费用与贪心作对比）：<a href="https://github.com/vegchic/CFLPsolver/blob/master/result/compare.csv" target="_blank" rel="noopener">compare.csv</a>。从性价比来看，退火用时过长，不太划算，不过这也是因为我的写法太过耗时。</p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/homework/">#homework</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/algorithm/">#algorithm</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2019/03/08/【系分】第一周作业/">【系分】第一周作业</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2018/12/11/【week15】820. Short Encoding of Words 解题报告/">【week15】820. Short Encoding of Words 解题报告</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2018/12/22/CFLP 两种解题算法/';
+        this.page.identifier = '2018/12/22/CFLP 两种解题算法/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

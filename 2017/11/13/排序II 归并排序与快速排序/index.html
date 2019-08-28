@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>排序II 归并排序与快速排序 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            排序II 归并排序与快速排序
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2017-11-13T00:00:00.000Z" itemprop="datePublished">11月 13 2017</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/ds/">ds</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            9 分钟 读完 (约 1421 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <h2><span id="前言">前言</span></h2><p>emmm，也没什么说的，归并排序和快速排序都是一种“分而治之”的思想实现，所以就一起说了，至于堆排序就不说了，毕竟我还要写二项队列。。</p>
+<a id="more"></a> 
+<hr>
+<h2><span id="归并排序">归并排序</span></h2><p>归并排序的核心思想很简单：<strong>把数组对半拆分-&gt;分别排序-&gt;有序合并</strong>。明白了这个就可以采用递归来实现，基准条件就是数组为空时。（虽然这么说但第一次写完全不会。</p>
+<p><img src="/images/sort2/example.gif" alt=""><br><a href="https://commons.wikimedia.org/w/index.php?curid=14961648" target="_blank" rel="noopener">gif By Swfung8</a></p>
+<h3><span id="实现">实现</span></h3><p>对半拆分是递归实现。有序合并可以使用两个index分别指向要合并的数组，然后根据大小将元素放进<code>temp</code>中（<code>temp</code>为中转数组，整个排序只需要一个）</p>
+<h3><span id="src">src</span></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MergeSort</span> &#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">msort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr, <span class="keyword">int</span> temp[], <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (start &lt; end) &#123;</span><br><span class="line">        <span class="keyword">int</span> center = (start + end) / <span class="number">2</span>;</span><br><span class="line">        msort(arr, temp, start, center);</span><br><span class="line">        msort(arr, temp, center + <span class="number">1</span>, end);</span><br><span class="line">        merge(arr, temp, start, center + <span class="number">1</span>, end);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr, <span class="keyword">int</span> temp[], <span class="keyword">int</span> start, <span class="keyword">int</span> middle, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> i = start, j = middle, begin = start;</span><br><span class="line">      <span class="keyword">while</span> (i &lt; middle &amp;&amp; j &lt;= end)</span><br><span class="line">        <span class="keyword">if</span> (arr[i] &gt; arr[j])</span><br><span class="line">          temp[start++] = arr[j++];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          temp[start++] = arr[i++];</span><br><span class="line">      <span class="keyword">while</span> (i &lt; middle) </span><br><span class="line">        temp[start++] = arr[i++];</span><br><span class="line">      <span class="keyword">while</span> (j &lt;= end)</span><br><span class="line">        temp[start++] = arr[j++];</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> k = begin; k &lt;= end; ++k)</span><br><span class="line">        arr[k] = temp[k];</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; sort(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!arr.size())</span><br><span class="line">        <span class="keyword">return</span> arr;</span><br><span class="line">      <span class="keyword">int</span> *temp = <span class="keyword">new</span> <span class="keyword">int</span>[arr.size() * <span class="keyword">sizeof</span>(<span class="keyword">int</span>)];</span><br><span class="line">      msort(arr, temp, <span class="number">0</span>, arr.size() - <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">return</span> arr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3><span id="时间复杂度">时间复杂度</span></h3><p>假设数组的大小为$N=2^k$，则时间的递推公式为</p>
+<p>$$T(1)=1$$</p>
+<p>$$T(N)=2T(N/2)+N$$</p>
+<p>上式中$T(1)$消耗常数时间，而$T(N)$则消耗将其子数组排序的时间和自身合并的时间。经过计算可得</p>
+<p>$$T(N)=NT(1)+N\log N=N\log N+N$$</p>
+<p>所以时间复杂度为$O(N\log N)$</p>
+<hr>
+<h2><span id="快速排序">快速排序</span></h2><p>顾名思义，这个排序很快，是平均情形下最快的已知算法。<br>快排的核心算法也很简单，假设有一个数组$S$：</p>
+<ol>
+<li>如果$S$中元素个数为0或1，则返回</li>
+<li>取$S$任一元素$v$为枢纽元（<em>pivot</em>）</li>
+<li>将$S-\lbrace v \rbrace$分成两个不相交的集合：$S_1=\lbrace x\in S-\lbrace v\rbrace \mid x\le v\rbrace $和$S_2=\lbrace x\in S-\lbrace v\rbrace\mid x\ge v\rbrace$</li>
+<li>返回$quicksort(S_1)$后，继随$v$，继而$quicksort(S_2)$，即三者按该顺序存放在$S$中。</li>
+</ol>
+<p>换个角度看这个排序，即<strong>每次选出一个枢纽元，并将其放在它应该在的地方（排序后的位置）</strong></p>
+<p><img src="/images/sort2/example2.gif" alt=""><br><a href="https://commons.wikimedia.org/w/index.php?curid=1965827" target="_blank" rel="noopener">gif By en:User:RolandH</a></p>
+<h3><span id="选取枢纽元">选取枢纽元</span></h3><p>最简单的方法或许是直接选取第一个或最后一个元素作为枢纽元，但这样是很糟糕的选法，如果输入为有序数组，则排序将产生一个很坏的分割（反序亦然），而且会花费O(N^2)时间却什么都没做。</p>
+<p>还有一种方法是使用随机数生成，但这会花费额外的时间代价，所以也不可取。</p>
+<p>这里采用的是<strong>三数中值分割法</strong>（<em>Median-of-Three Partitioning</em>）。如果是想要最好的分割，自然是对半分，即选取中值作为枢纽元，但中值的计算又要付出代价，所以这里直接选取三个元素并将其中值作为枢纽元，这三个元素也不需随机，直接使用<strong>左端，中心位置，右端</strong>的三个元素即可。</p>
+<h3><span id="分割策略">分割策略</span></h3><p>将枢纽元放在<code>A[right-1]</code>中，这样就可以定义两个下标<code>i, j</code>，分别指向<code>A[left]</code>和<code>A[right-1]</code>，并相向而行，若下标指向元素同时不符合条件（<code>A[i]</code>应小于<code>pivot</code>，<code>A[j]</code>应大于<code>pivot</code>），则交换二者，而当<code>i&gt;j</code>时，则分割完毕。对于与枢纽元相等的元素，这里也进行了交换。</p>
+<p>对于小数组($N\le20$)，快排不如插入排序好，所以可以<code>define</code>一个<strong>截止范围</strong>（<em>cutoff range</em>），数组大小小于时则使用插入排序，也避免了数组过小三数中值无法正确运行的情况。</p>
+<h3><span id="src">src</span></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">quickSort</span> &#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">median</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> med = (left + right) / <span class="number">2</span>;</span><br><span class="line">      <span class="keyword">if</span> (arr[left] &gt; arr[med])</span><br><span class="line">        swap(arr[left], arr[med])</span><br><span class="line">      <span class="keyword">if</span> (arr[med] &gt; arr[right])</span><br><span class="line">        swap(arr[med], arr[right])</span><br><span class="line">      <span class="keyword">if</span> (arr[left] &gt; arr[med])</span><br><span class="line">        swap(arr[left], arr[med])</span><br><span class="line">      swap(arr[med], arr[right - <span class="number">1</span>]);</span><br><span class="line">      <span class="keyword">return</span> arr[right - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">qsort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (right - left &gt;= CUTOFF) &#123;</span><br><span class="line">        <span class="keyword">int</span> pivot = median(arr, left, right);</span><br><span class="line">        <span class="keyword">int</span> i = left, j = right - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">          <span class="keyword">while</span> (arr[++i] &lt; pivot) &#123;&#125;</span><br><span class="line">          <span class="keyword">while</span> (arr[--j] &gt; pivot) &#123;&#125;</span><br><span class="line">          <span class="keyword">if</span> (i &lt; j)</span><br><span class="line">            swap(arr[i], arr[j])</span><br><span class="line">        &#125;</span><br><span class="line">        swap(arr[i], arr[right - <span class="number">1</span>]);</span><br><span class="line">        qsort(arr, left, i - <span class="number">1</span>);</span><br><span class="line">        qsort(arr, i + <span class="number">1</span>, right);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        insertSort(arr, left, right);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insertSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= right; ++i) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp = arr[i], j;</span><br><span class="line">        <span class="keyword">for</span> (j = i; j &gt; <span class="number">0</span> &amp;&amp; arr[j - <span class="number">1</span>] &gt; temp; --j)</span><br><span class="line">          arr[j] = arr[j - <span class="number">1</span>];</span><br><span class="line">        arr[j] = temp;        </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; sort(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;arr) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!arr.size())</span><br><span class="line">        <span class="keyword">return</span> arr;</span><br><span class="line">      qsort(arr, <span class="number">0</span>, arr.size() - <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">return</span> arr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3><span id="时间复杂度">时间复杂度</span></h3><p><strong>最坏的情形</strong>是枢纽元始终是最小的元素，递推式为</p>
+<p>$$T(N)=T(N-1)+cN, N&gt;1$$</p>
+<p>此时时间复杂度为$O(N^2)$；</p>
+<p><strong>最好的情形</strong>是枢纽元恰巧位于中间，递推式为</p>
+<p>$$T(N)=T(N/2)+cN, N&gt;1$$</p>
+<p>此时时间复杂度为$O(N\log N)$；</p>
+<p><strong>平均情形</strong>时假设子数组的大小都是等可能的，为$1/N$，则递推式为</p>
+<p>$$T(N)=\frac{2}{N} \left[\sum^{N-1}_{j=0}T(j)\right]+cN$$</p>
+<p>此时时间复杂度为$O(N\log N)$</p>
+<hr>
+<h2><span id="refernce">Refernce</span></h2><p><em>《数据结构与算法分析——C语言描述》,Mark Allen Weiss</em></p>
+<h3><span id="for-more">For More</span></h3><p><a href="https://en.wikipedia.org/wiki/Merge_sort" target="_blank" rel="noopener">Mergesort</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Quicksort" target="_blank" rel="noopener">Quicksort</a></p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/algorithm/">#algorithm</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/sort/">#sort</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2017/11/19/堆，二项队列，堆排序/">堆，二项队列，堆排序</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2017/11/11/排序I 插入排序与Shell排序/">排序I 插入排序与Shell排序</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2017/11/13/排序II 归并排序与快速排序/';
+        this.page.identifier = '2017/11/13/排序II 归并排序与快速排序/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

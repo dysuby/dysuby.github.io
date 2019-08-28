@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>排序I 插入排序与Shell排序 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            排序I 插入排序与Shell排序
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2017-11-11T00:00:00.000Z" itemprop="datePublished">11月 11 2017</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/ds/">ds</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            7 分钟 读完 (约 1044 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <h2><span id="前言">前言</span></h2><p>插入排序是一种典型的基于相邻元素交换的简单算法（还有冒泡排序和选择排序等），而Shell排序则在某种程度上与插入算法类似，故而放在一起说。（至于冒泡和选择？一个插入不就够了吗）</p>
+<a id="more"></a> 
+<hr>
+<h2><span id="插入排序">插入排序</span></h2><p>插入排序的思想很简单，假设有一个序列<code>[x1, x2...xn]</code>，当对第k个元素进行排序时，把这个元素插入前面k-1个元素（已经有序）中合适的位置中（依然保持有序），也就是说，<strong>若保证前k-1个元素有序，插入第k个元素后前k个元素也将保持有序，那么经过n次插入后，整个序列也将有序</strong>。</p>
+<h3><span id="c实现">C++实现</span></h3><p>实现中避免了显式的交换，而是将比<code>nk</code>大的元素都往后移了一位。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertsort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;ele)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> temp = <span class="number">0</span>, j = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">1</span>; index &lt; ele.size(); ++index) &#123;</span><br><span class="line">    temp = ele[index];</span><br><span class="line">    <span class="keyword">for</span> (j = index; j &gt;= <span class="number">1</span> &amp;&amp; temp &lt; ele[j - <span class="number">1</span>]; --j)</span><br><span class="line">      ele[j] = ele[j - <span class="number">1</span>];</span><br><span class="line">    ele[j] = temp;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3><span id="时间复杂度">时间复杂度</span></h3><h4><span id="插入排序">插入排序</span></h4><p>由代码可见，最坏情形下（如果反序输入），那么计算总数将为</p>
+<p>$$<br>\sum_{i=2}^{n}i = 2 + 3 + 4 + … + N = \Theta (N^2)<br>$$</p>
+<p>实际上，插入排序的平均情形也是$\Theta (N^2)$，而如果事先排好序，那么时间复杂度将为 $O(N)$ 。</p>
+<h3><span id="简单排序算法的下界">简单排序算法的下界</span></h3><p>首先，定义<strong>逆序</strong>的概念：在数组中具有 $i&lt;j$ 且 $A[i] &gt; A[j]$ 的有序对 $(A[i], A[j])$，而这正是简单排序算法的执行交换次数，每交换一次（非直接）不按顺序排列的两个元素将会消除一个逆序。当数组中不存在逆序时，则数组有序。</p>
+<p><strong>定理一：N个互异数的数组平均逆序数是 $N(N-1)/4$</strong></p>
+<p>证明：若一个数组有N个数，则将有$N(N-1)$个有序对$(A[i], A[j])$，而其中$i&lt;j$的有$N(N-1)/2$，那么其中为逆序的平均便有$N(N-1)/4$个</p>
+<p><strong>定理二：通过交换相邻元素进行排序的任何算法平均需要 $\Omega(N^2)$ 的时间</strong></p>
+<p>证明：初始的平均逆序数为$N(N-1)/4 = \Omega(N^2)$，而每一次交换只减少一个逆序，因此需要$\Omega(N^2)$次交换。</p>
+<hr>
+<h2><span id="shell排序">Shell排序</span></h2><p><strong>Shell排序</strong>也称<strong>缩小增量排序(<em>diminishing increment sort</em>)</strong>，由<em>Donald Shell</em>发明。</p>
+<p>希尔排序使用一个增量序列 $h_1, h_2, …, h_t$ ，只要$h_1=1$，那么任意增量序列都是可以的，因为此时排序等同于插入排序，当然不同序列的效率也有所不同。在使用$h_k$进行增量排序后，对于任意的$i$都有$A[i]&lt;A[i+k]$(假设存在)，即所有相隔为$h_k$的元素都被排序，此时称数组为$h_k$-排序的（<em>$h_k$-sorted</em>）。而希尔排序的一个重要性质是，一个<em>$h_k$-sorted</em>的数组在之后的$h_{k+1}$排序中也将保持其$h_k$-排序的性质。</p>
+<h3><span id="c实现">C++实现</span></h3><p>实际上是对任意的$i$对应的序列$A[i], A[i+h_k], A[i+2h_k]…$进行插入排序。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shellsort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;ele, <span class="built_in">string</span> choice = <span class="string">"Shell"</span>)</span> </span>&#123;</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; *seq;</span><br><span class="line">  <span class="keyword">if</span> (choice == <span class="string">"Sedgewick"</span>) &#123;</span><br><span class="line">    seq = &amp;Sedgewick;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (choice == <span class="string">"Hibbard"</span>) &#123;</span><br><span class="line">    seq = &amp;Hibbard;</span><br><span class="line">  &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">    seq = <span class="keyword">new</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = ele.size() / <span class="number">2</span>; i &gt; <span class="number">0</span>; i /= <span class="number">2</span>)</span><br><span class="line">      seq -&gt; insert(seq -&gt; begin(), i);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> temp = <span class="number">0</span>, j = <span class="number">0</span>, k = seq -&gt; size() - <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> ((*seq)[k] &gt; ele.size() / <span class="number">2</span>)</span><br><span class="line">    --k;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> inc = (*seq)[k]; <span class="literal">true</span>; inc = (*seq)[--k]) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> index = inc; index &lt; ele.size(); ++index) &#123;</span><br><span class="line">      temp = ele[index];</span><br><span class="line">      <span class="keyword">for</span> (j = index; j &gt;= inc; j -= inc)</span><br><span class="line">        <span class="keyword">if</span> (ele[j - inc] &gt; temp)</span><br><span class="line">          ele[j] = ele[j - inc];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">      ele[j] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (inc == <span class="number">1</span>) <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4><span id="类实现">类实现</span></h4><p>选择哪一种增量排序视情况我给了用户（不存在的）自己选择，故而有了<code>string</code>参数，并将增量序列封装成了<code>private</code>，这样写看上去有点low，但比起现场生成个人认为通过<code>while</code>判断从哪里开始更有效率，而如果选择了<em>Shell</em>序列，则构建一个序列也与之前的没差多少，具体可见<a href="https://github.com/vegchic/learn-ds/blob/master/sort/shellsort(insert" target="_blank" rel="noopener">vegchic/learn-ds/sort/shellsort(insert)</a>.cpp)</p>
+<hr>
+<h3><span id="时间复杂度">时间复杂度</span></h3><p>由于有不同的序列，这里只列出几种不同序列的时间复杂度。具体可见<a href="https://en.wikipedia.org/wiki/Shellsort#Gap_sequences" target="_blank" rel="noopener">wikipedia</a></p>
+<table>
+<thead>
+<tr>
+<th>序列</th>
+<th>计算公式</th>
+<th>具体</th>
+<th>最坏情形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Shell</em></td>
+<td>$\left\lfloor\frac{N}{2^k}\right\rfloor\quad$</td>
+<td>$\left\lfloor\frac{N}{2}\right\rfloor,\left\lfloor\frac{N}{4}\right\rfloor,…,1$</td>
+<td>$\Theta(N^2)$</td>
+</tr>
+<tr>
+<td><em>Hibbard</em></td>
+<td>$2^k-1$</td>
+<td>$1,3,7,15…$</td>
+<td>$\Theta(N^{\frac{3}{2}})$</td>
+</tr>
+</tbody>
+</table>
+<p>|    <em>Sedgewick</em>  | $\begin{cases}9(4^{k-1} - 2^{\frac{k}{2}}) + 1\text{ }k\text{ is even} \\ 4^{k+1} - 6\cdot2^{(k+1)/2} + 1\text{ }k\text{ is odd}\end{cases}$  | $1,5,19,41,109,…$  | $\Theta(N^{\frac{4}{3}})$ |</p>
+<hr>
+<h2><span id="测试">测试</span></h2><p>以后的排序测试大概都是这个套路+valgrind了，就不贴了<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;random&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TEST 999</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  sort solution;</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; test;</span><br><span class="line">  default_random_engine e(time(0));</span><br><span class="line">  uniform_int_distribution&lt;<span class="keyword">unsigned</span>&gt; u(<span class="number">0</span>, TEST);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; TEST; ++i) &#123;</span><br><span class="line">    test.push_back(u(e));</span><br><span class="line">  &#125;</span><br><span class="line">  solution.shellsort(test, <span class="string">"Shell"</span>);</span><br><span class="line">  <span class="keyword">int</span> prev = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; TEST; ++index) &#123;</span><br><span class="line">    <span class="keyword">if</span> (prev &gt; test[index])</span><br><span class="line">      <span class="built_in">cout</span> &lt;&lt; <span class="string">"error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    prev = test[index];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; test2;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; TEST; ++i) &#123;</span><br><span class="line">    test2.push_back(u(e));</span><br><span class="line">  &#125;</span><br><span class="line">  solution.insertsort(test2);</span><br><span class="line">  prev = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; TEST; ++index) &#123;</span><br><span class="line">    <span class="keyword">if</span> (prev &gt; test2[index])</span><br><span class="line">      <span class="built_in">cout</span> &lt;&lt; <span class="string">"error"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    prev = test2[index];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2><span id="结语">结语</span></h2><p>最近学到了排序，虽然以前也已经开始用了，但是终归系统的学习了一下，故而写两篇笔记记录下自己学的。</p>
+<h3><span id="reference">Reference</span></h3><p><a href="https://en.wikipedia.org/wiki/Shellsort#Gap_sequences" target="_blank" rel="noopener">Shellsort</a></p>
+<p><em>《数据结构与算法分析——C语言描述》,Mark Allen Weiss</em></p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/algorithm/">#algorithm</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/sort/">#sort</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2017/11/13/排序II 归并排序与快速排序/">排序II 归并排序与快速排序</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2017/10/26/AVL树简介及C++实现/">AVL树简介及C++实现</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2017/11/11/排序I 插入排序与Shell排序/';
+        this.page.identifier = '2017/11/11/排序I 插入排序与Shell排序/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>Vi, java, Ant, Junit自学报告 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Vi, java, Ant, Junit自学报告
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2018-04-25T00:00:00.000Z" itemprop="datePublished">4月 25 2018</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/java/">java</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            17 分钟 读完 (约 2552 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <p>实训报告。简单的记录自己所学，然而实训之后就忘光了。</p>
+<a id="more"></a> 
+<h2><span id="vivim">Vi/Vim</span></h2><p>Vi是Linux系统自带的命令行编辑器，其功能强大，且无需GUI即可运行。而Vim是Vi的进阶版本，其功能更强大，且有丰富的插件，使其深受程序员喜爱。 </p>
+<p>Vi分为三种模式，命令行模式（command mode），插入模式（insert mode），底行模式（Last Line Mode，有些地方称为command-line mode）。</p>
+<h3><span id="使用">使用</span></h3><p>进入时只需在命令行输入<code>vi file</code>即可打开file，并进入命令行模式。</p>
+<h4><span id="命令模式">命令模式</span></h4><p>输入<code>i</code>可直接进入插入模式（还有其他指令），按下Esc可从插入模式切换回来。<br>在命令行模式中可移动光标，删除字符等操作，下面列出部分操作。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>移动光标</strong></td>
+</tr>
+<tr>
+<td>h或左箭头键(←)</td>
+<td>光标左移一格</td>
+</tr>
+<tr>
+<td>j或下箭头键(↓)</td>
+<td>光标下移一格</td>
+</tr>
+<tr>
+<td>k或上箭头键(↑)</td>
+<td>光标上移一格</td>
+</tr>
+<tr>
+<td>l或右箭头键(→)</td>
+<td>光标右移一格</td>
+</tr>
+<tr>
+<td>0</td>
+<td>移到此行开头</td>
+</tr>
+<tr>
+<td>$</td>
+<td>移到此行末尾</td>
+</tr>
+<tr>
+<td>G</td>
+<td>移到最后</td>
+</tr>
+<tr>
+<td>gg</td>
+<td>移到开头</td>
+</tr>
+<tr>
+<td>^</td>
+<td>移到此行第一个非空白字符</td>
+</tr>
+<tr>
+<td>w</td>
+<td>移到下一个字的开头</td>
+</tr>
+<tr>
+<td>e</td>
+<td>移到这一个字的字尾</td>
+</tr>
+<tr>
+<td>b</td>
+<td>移到上一个字的开头</td>
+</tr>
+<tr>
+<td>#l</td>
+<td>移到此行的第#个位置，如：5l</td>
+</tr>
+<tr>
+<td><strong>删除</strong></td>
+</tr>
+<tr>
+<td>x</td>
+<td>删除下一个字符</td>
+</tr>
+<tr>
+<td>X（大写）</td>
+<td>删除前一个字符</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>删除此行</td>
+</tr>
+<tr>
+<td>#x，#X</td>
+<td>类比#l</td>
+</tr>
+<tr>
+<td>#dd</td>
+<td>从此行开始删除#行</td>
+</tr>
+<tr>
+<td><strong>复制</strong></td>
+</tr>
+<tr>
+<td>yw</td>
+<td>将光标所在之处到字尾的字符复制到缓冲区中</td>
+</tr>
+<tr>
+<td>yy</td>
+<td>复制该行到缓冲区</td>
+</tr>
+<tr>
+<td>#yw，#yy</td>
+<td>类比以上</td>
+</tr>
+<tr>
+<td>p</td>
+<td>将缓冲区内的字符贴到光标所在位置</td>
+</tr>
+<tr>
+<td><strong>替换</strong></td>
+</tr>
+<tr>
+<td>r</td>
+<td>替换光标所在之处字符</td>
+</tr>
+<tr>
+<td>R</td>
+<td>替换光标所到之处的字符，直到按下「ESC」键为止</td>
+</tr>
+<tr>
+<td><strong>恢复</strong></td>
+</tr>
+<tr>
+<td>u</td>
+<td>撤销</td>
+</tr>
+<tr>
+<td><strong>更改</strong></td>
+</tr>
+<tr>
+<td>cw</td>
+<td>更改光标所在处的字到字尾处</td>
+</tr>
+<tr>
+<td>c#w</td>
+<td>更改#个<strong>字</strong>（不是字符）</td>
+</tr>
+<tr>
+<td>跳行</td>
+</tr>
+<tr>
+<td>[ctrl] + g</td>
+<td>列出光标所在行的行号</td>
+</tr>
+<tr>
+<td>#G</td>
+<td>表示移动光标至文章的第#行行首</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="插入模式">插入模式</span></h3><p>无需多言，有三种进入方式。只需记住其功能是<strong>插入</strong>即可</p>
+<ol>
+<li>按i进入插入模式后，是从光标当前位置开始输入文件。</li>
+<li>按a进入插入模式后，是从目前光标所在位置的下一个位置开始输入文字。</li>
+<li>按o进入插入模式后，是插入新的一行，从行首开始输入文字。</li>
+</ol>
+<h3><span id="底行模式">底行模式</span></h3><p>在命令行模式下按下冒号（[:]）即可进入底行模式。</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>set nu</td>
+<td>每一行都会显示行号</td>
+</tr>
+<tr>
+<td>set nonu</td>
+<td>取消显示行号</td>
+</tr>
+<tr>
+<td>w</td>
+<td>保存</td>
+</tr>
+<tr>
+<td>w!</td>
+<td>强制保存</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出Vi</td>
+</tr>
+<tr>
+<td>q!</td>
+<td>不保存强制退出</td>
+</tr>
+<tr>
+<td>wq</td>
+<td>保存并退出</td>
+</tr>
+<tr>
+<td>/word</td>
+<td>查找word，可按n往后继续寻找</td>
+</tr>
+<tr>
+<td>?word</td>
+<td>查找word，可按n往前继续寻找</td>
+</tr>
+<tr>
+<td>!command</td>
+<td>暂时离开Vi并执行command命令</td>
+</tr>
+</tbody>
+</table>
+<h2><span id="vivim总结">Vi/Vim总结</span></h2><p>Vi/Vim功能强大，并非几日便能速成，需要长期使用才能熟能生巧。其在ssh中显得尤为重要。</p>
+<p>另外就是，实训给出的文档有几个错误，比如[0]的作用。</p>
+<p>参考：</p>
+<p><a href="http://linux.vbird.org/linux_basic/0310vi.php#vim_v" target="_blank" rel="noopener">鳥哥的 Linux 私房菜</a></p>
+<h2><span id="java">Java</span></h2><p>Java的基本语法大部分与C/C++并无不同，但是在设计上比C/C++更“亲民”，下面通过简单的学习总结其特点（充满主观性）。</p>
+<ul>
+<li><p>变量引用。不同于C/C++，Java没有指针，取而代之的是对象的引用。对于一个基本类型的变量，变量即是其本身，但对于一个对象变量，变量只是这个对象的引用，也就是说，变量存在栈中，而对象存在堆中，变量指向这个对象。</p>
+</li>
+<li><p>GC（<em>Garbage Collection</em>）。Java无需手动释放内存，它的垃圾回收机制会将无用的内存回收，基本原则便是回收不可再达到的对象内存，即该对象已无任何引用。</p>
+</li>
+<li><p>完全的面向对象。OOP三大特性：继承，封装，多态，Java都支持的很好，没有C/C++的多重继承，Java使用了单继承与接口，实现了多重继承的功能。</p>
+</li>
+<li><p>丰富的高级特性和api。反射，容器，多线程，泛型，网络编程，包（<em>package</em>），Java的高级特性方便了程序员的使用，也封装了底层的许多细节。</p>
+</li>
+<li><p>独特的编译和执行行程。不同于类似C/C++的编译性语言，也不是类似JavaScript的解释性语言，Java被称为半解释语言。源代码首先会被编译器编译成字节码（.class），字节码再由JVM解释运行，具有高性能，当然还比不上C/C++。</p>
+</li>
+<li><p>生态繁荣。Java应用广泛，JVM为其跨平台提供了有力的支持，Android开发为其注入了新鲜血液，Java的生态繁荣，许多学习资料随处可得，丰富的源码库也让使用者使用起来更轻松。</p>
+</li>
+</ul>
+<p>因为之前接触过C#，所以学起Java大概会轻松一丢丢，但是要将其运用到开发中还是不容易的，需要实际动手才能领略其特点。</p>
+<h2><span id="ant">Ant</span></h2><p>Ant,是一个将软件编译、测试、部署等步骤联系在一起加以自动化的一个工具，有点类似于C/C++的make，其没有单独的语法，而是通过xml来构建，免去了重新学习的时间。下面是一个简单的<code>build.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">name</span>=<span class="string">"Caculator"</span> <span class="attr">default</span>=<span class="string">"compile"</span> <span class="attr">basedir</span>=<span class="string">"."</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- set global properties for this build --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"src"</span> <span class="attr">location</span>=<span class="string">"src"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"build"</span> <span class="attr">location</span>=<span class="string">"build"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"lib"</span> <span class="attr">location</span>=<span class="string">"lib"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"entry"</span> <span class="attr">value</span>=<span class="string">"com.vegchic.junittest.HelloWorld"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"init"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Create the time stamp --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tstamp</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Create the build directory structure used by compile --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mkdir</span> <span class="attr">dir</span>=<span class="string">"$&#123;build&#125;"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"compile"</span> <span class="attr">depends</span>=<span class="string">"init"</span> <span class="attr">description</span>=<span class="string">"compile the source"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Compile the java code from $&#123;src&#125; into $&#123;build&#125; --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">javac</span> <span class="attr">srcdir</span>=<span class="string">"$&#123;src&#125;"</span> <span class="attr">destdir</span>=<span class="string">"$&#123;build&#125;"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"run"</span> <span class="attr">depends</span>=<span class="string">"compile"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">java</span> <span class="attr">classname</span>=<span class="string">"$&#123;entry&#125;"</span> <span class="attr">fork</span>=<span class="string">"yes"</span> <span class="attr">classpath</span>=<span class="string">"$&#123;build&#125;"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"test"</span> <span class="attr">depends</span>=<span class="string">"compile"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">junit</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">classpath</span> <span class="attr">location</span>=<span class="string">"$&#123;build&#125;"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">formatter</span> <span class="attr">type</span>=<span class="string">"brief"</span> <span class="attr">usefile</span>=<span class="string">"false"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">test</span> <span class="attr">name</span>=<span class="string">"com.vegchic.test.HelloWorldTest"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">junit</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"clean"</span> <span class="attr">description</span>=<span class="string">"clean up"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Delete the $&#123;build&#125; and $&#123;dist&#125; directory trees --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">delete</span> <span class="attr">dir</span>=<span class="string">"$&#123;build&#125;"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>由xml简洁易懂的语法容易看出，这个<code>build.xml</code>有5个命令，分别为<code>init</code>，<code>compile</code>，<code>run</code>，<code>test</code>，<code>run</code>。</p>
+<ul>
+<li><code>&lt;project&gt;</code>即使项目的信息描述，<code>default</code>为默认命令，如果不执行默认命令则需输入<code>ant &lt;commandName&gt;</code>。</li>
+<li><code>&lt;property&gt;</code>是一些变量的定义。</li>
+<li><code>&lt;target&gt;</code>是需要运行的命令，其子元素的标签名即是各种命令，可以使用Ant的内建命令，也可以自己自定义，其中的属性相当于命令行中的参数，如<code>mkdir ${dist}/lib</code>。其中<code>depends=</code>则是依赖关系的体现，如果依赖命令还未执行，会先执行依赖命令。</li>
+</ul>
+<p>下面是使用结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">unddd@unddd-virtual-machine:~/helloWorld$ ant run</span><br><span class="line">Buildfile: /home/unddd/helloWorld/build.xml</span><br><span class="line"></span><br><span class="line">init:</span><br><span class="line"></span><br><span class="line">compile:</span><br><span class="line">    [javac] /home/unddd/helloWorld/build.xml:16: warning: <span class="string">'includeantruntime'</span> was not <span class="built_in">set</span>, defaulting to build.sysclasspath=last; <span class="built_in">set</span> to <span class="literal">false</span> <span class="keyword">for</span> repeatable builds</span><br><span class="line">    [javac] Compiling 2 <span class="built_in">source</span> files to /home/unddd/helloWorld/build</span><br><span class="line"></span><br><span class="line">run:</span><br><span class="line">     [java] Done!!!</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL</span><br><span class="line">Total time: 0 seconds</span><br><span class="line">unddd@unddd-virtual-machine:~/helloWorld$</span><br></pre></td></tr></table></figure>
+<p>ant的简单使用不难，但是要深入学习还需要下功夫才行。</p>
+<h2><span id="junit">Junit</span></h2><p>Junit是一款Java的单元测试框架。在我看来，它通过测试类来测试目的方法是否能正常执行其功能。</p>
+<h3><span id="简单使用">简单使用</span></h3><p>junit通过注解和断言来进行测试，只要写一个测试类，并通过<code>import</code>Juint的api即可测试，下面是一个简单的测试类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.vegchic.test;</span><br><span class="line"><span class="keyword">import</span> junit.framework.TestCase;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.Assert.assertEquals;</span><br><span class="line"><span class="keyword">import</span> com.vegchic.junittest.HelloWorld;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorldTest</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String res = HelloWorld.sayHello(); <span class="comment">//should return "Hello world"</span></span><br><span class="line">    assertEquals(res, <span class="string">"Hello world"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGetInt</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = HelloWorld.getInt(); <span class="comment">//should return 5;</span></span><br><span class="line">    assertEquals(<span class="number">5</span>, res);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后输入<code>java org.junit.runner.JunitCore &lt;testClassName&gt;</code>即可运行测试。下面会介绍如何与ant搭配使用。</p>
+<h3><span id="注解">注解</span></h3><p>需要引入<code>org.junit.*</code>（Junit5中为<code>org.junit.jupiter.api.*</code>）。</p>
+<ul>
+<li><p><code>@Test</code>，即实际的测试方法。</p>
+</li>
+<li><p><code>@Before</code>，在每个测试方法执行前执行。在Junit5中改为<code>@BeforeEach</code>。</p>
+</li>
+<li><p><code>@After</code>，在每个测试方法后执行。在Junit5中改为<code>@AfterEach</code>。</p>
+</li>
+<li><p><code>@BeforeClass</code>，静态测试方法，会在所有测试方法开始前测试，且只有一次。在Junit5中改为<code>@BeforeAll</code>。</p>
+</li>
+<li><p><code>@AfterClass</code>，类似<code>@BeforeClass</code>。在Junit5中改为<code>@AfterAll</code>。</p>
+</li>
+<li><p><code>@Ignore</code>，加了这个注解的<code>@Test</code>不会执行。在Junit5中改为<code>@Disabled</code>。</p>
+</li>
+</ul>
+<h3><span id="断言">断言</span></h3><p>断言在<code>org.junit.Assert.*</code>中，为静态方法。junit5为<code>org.junit.jupiter.Assertions</code>。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>void assertEquals(boolean expected, boolean actual)</code></td>
+<td>检查两个变量或者等式是否相等</td>
+</tr>
+<tr>
+<td><code>void assertArrayEquals​(boolean[] expected, boolean[] actual)</code></td>
+<td>检查两个数组是否相等</td>
+</tr>
+<tr>
+<td><code>void assertTrue​(boolean condition)</code></td>
+<td>检查条件是真的</td>
+</tr>
+<tr>
+<td><code>void assertNotNull(Object object)</code></td>
+<td>检查对象不是空的</td>
+</tr>
+<tr>
+<td><code>void assertSame​(java.lang.Object expected, java.lang.Object actual)</code></td>
+<td>检查两个对象引用是否指向同一个对象</td>
+</tr>
+</tbody>
+</table>
+<p>其中对于基本类型比较支持byte，char，float，boolean等类型（junit4中只支持Double），详情可见<a href="https://junit.org/junit4/javadoc/latest/org/junit/Assert.html" target="_blank" rel="noopener">org.junit.Assert</a>。</p>
+<h3><span id="与ant搭配使用">与Ant搭配使用</span></h3><p>前面说到，Ant支持测试，自然也为Junit提供了支持。下面是一个简单的test target。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">"test"</span> <span class="attr">depends</span>=<span class="string">"compile"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">junit</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">classpath</span> <span class="attr">location</span>=<span class="string">"$&#123;build&#125;"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">formatter</span> <span class="attr">type</span>=<span class="string">"brief"</span> <span class="attr">usefile</span>=<span class="string">"false"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">test</span> <span class="attr">name</span>=<span class="string">"$&#123;testClass&#125;"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">junit</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>&lt;classpath&gt;</code>顾名思义，而<code>&lt;formatter&gt;</code>是测试的信息格式，<code>&lt;test&gt;</code>是测试类的名字。运行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">unddd@unddd-virtual-machine:~/helloWorld$ ant <span class="built_in">test</span></span><br><span class="line">Buildfile: /home/unddd/helloWorld/build.xml</span><br><span class="line"></span><br><span class="line">init:</span><br><span class="line"></span><br><span class="line">compile:</span><br><span class="line">    [javac] /home/unddd/helloWorld/build.xml:16: warning: <span class="string">'includeantruntime'</span> was not <span class="built_in">set</span>, defaulting to build.sysclasspath=last; <span class="built_in">set</span> to <span class="literal">false</span> <span class="keyword">for</span> repeatable builds</span><br><span class="line">    [javac] Compiling 2 <span class="built_in">source</span> files to /home/unddd/helloWorld/build</span><br><span class="line"></span><br><span class="line"><span class="built_in">test</span>:</span><br><span class="line">    [junit] Testsuite: com.vegchic.test.HelloWorldTest</span><br><span class="line">    [junit] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 sec</span><br><span class="line">    [junit] </span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL</span><br><span class="line">Total time: 0 seconds</span><br><span class="line">unddd@unddd-virtual-machine:~/helloWorld$</span><br></pre></td></tr></table></figure>
+<h3><span id="junit总结">Junit总结</span></h3><p>虽然看上去语法并不难而且也接触不到深入使用，但是我被它的配置和各种包弄得生不如死。但也让我对java的寻包有了更深的理解（只能这么安慰自己了）。</p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/java/">#java</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/ant/">#ant</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/junit/">#junit</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/vi-vim/">#vi/vim</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2018/07/19/OS算法/">操作系统的一些算法</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2017/11/24/谈谈对Promise的小理解/">谈谈对Promise的小理解</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2018/04/25/Vi,Java, Ant,Junit自学报告/';
+        this.page.identifier = '2018/04/25/Vi,Java, Ant,Junit自学报告/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

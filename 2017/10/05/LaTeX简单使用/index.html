@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>LaTeX简单使用 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            LaTeX简单使用
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2017-10-05T00:00:00.000Z" itemprop="datePublished">10月 5 2017</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/LaTex/">LaTex</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            8 分钟 读完 (约 1133 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <h2><span id="前言">前言</span></h2><p>  因为离散要求写一篇算法的小文章，实在无法忍受word的数学公式输入之后，我自（<code>ctrl</code>）学（<code>c</code>）了一下LaTeX的写法，这里简单介绍我写文章时用到的代码，时隔多日，若有偏差欢迎指出</p>
+<a id="more"></a> 
+<hr>
+<h2><span id="中文latex">中文LaTeX</span></h2><p>  百度上输出中文的方法各种各样，在尝试n多种方法无果后（CJK什么的），使用了<strong>XeLaTeX</strong>，只需使用如下文档类型，中括号内为可选参数，UTF8表示使用utf8编码，花括号内为文档类型，ctexart表示其文档类型为中文article</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">documentclass</span><span class="string">[UTF8]</span><span class="string">&#123;ctexart&#125;</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="正文区">正文区</span></h2><p>形如<code>\begin{环境名}...\end{环境名}</code>称为<strong>环境</strong>，而<code>\begin{document}...\end{document}</code>则是正文区，里面的内容就是文章的内容，而这之前的部分则是用来导入各种<strong>宏包</strong></p>
+<h2><span id="标题摘要">标题摘要</span></h2><p>下面代码较为易懂，<code>\maketitle</code>也即打印标题<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">title</span><span class="string">&#123;Notes On LaTeX Typesetting&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">author</span><span class="string">&#123;Some One&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">date</span><span class="string">&#123;November 13, 2011&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">maketitle</span></span></span><br></pre></td></tr></table></figure></p>
+<p>当然还可以写摘要</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;abstract&#125;</span></span></span><br><span class="line">some abstract...</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;abstract&#125;</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="章节目录">章节目录</span></h2><p>代码如下，其中<code>\chapter</code>在article中不能使用</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">part</span><span class="string">&#123;部分标题&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">chapter</span><span class="string">&#123;章标题&#125;</span></span>这一章我们介绍这些内容。</span><br><span class="line"><span class="tag">\<span class="name">section</span><span class="string">&#123;节标题&#125;</span></span>这一节我们介绍这些内容。</span><br><span class="line"><span class="tag">\<span class="name">subsection</span><span class="string">&#123;小节标题&#125;</span></span>这一小节我们介绍这些内容。</span><br><span class="line"><span class="tag">\<span class="name">subsubsection</span><span class="string">&#123;子节标题&#125;</span></span>这一子节我们介绍这些内容。</span><br><span class="line"><span class="tag">\<span class="name">paragraph</span><span class="string">&#123;段标题&#125;</span></span>这一段我们介绍这些内容。</span><br><span class="line"><span class="tag">\<span class="name">subparagraph</span><span class="string">&#123;小段标题&#125;</span></span>这一小段我们介绍这些内容。</span><br></pre></td></tr></table></figure>
+<p>使用<code>\tableofcontents</code> 可以生成目录，而输入形如</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">renewcommand</span></span><span class="tag">\<span class="name">thesection</span><span class="string">&#123;§\arabic&#123;section&#125;</span></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>则可以自定义某一类章节标题的格式，在此不作示范</p>
+<h2><span id="列表环境">列表环境</span></h2><p>这里列举三种列表，分别为<strong>无序列表，有序列表，描述列表</strong></p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;itemize&#125;</span></span> <span class="comment">%无序列表</span></span><br><span class="line"><span class="tag">\<span class="name">item</span></span> 无编号的列表</span><br><span class="line"><span class="tag">\<span class="name">item</span></span> 带编号的列表</span><br><span class="line"><span class="tag">\<span class="name">item</span></span> 带标签的列表</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;itemize&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;enumerate&#125;</span></span> <span class="comment">%有序列表</span></span><br><span class="line"><span class="tag">\<span class="name">item</span></span> 无编号的列表</span><br><span class="line"><span class="tag">\<span class="name">item</span></span> 带编号的列表</span><br><span class="line"><span class="tag">\<span class="name">item</span></span> 带标签的列表</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;enumerate&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;description&#125;</span></span> <span class="comment">%描述列表</span></span><br><span class="line"><span class="tag">\<span class="name">item</span><span class="string">[无序列表]</span></span> 无编号的列表。<span class="comment">%中括号内为描述内容（相当于一种“序号”）</span></span><br><span class="line"><span class="tag">\<span class="name">item</span><span class="string">[有序列表]</span></span> 带编号的列表。</span><br><span class="line"><span class="tag">\<span class="name">item</span><span class="string">[描述列表]</span></span> 带标签的列表。</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;description&#125;</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="插入图片">插入图片</span></h2><p>插入已有图片需要导入宏包<strong>graphicx</strong>，即<code>\usepackage{graphicx}</code>，使用如下</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">includegraphics</span><span class="string">[选项]</span><span class="string">&#123;图形文件&#125;</span></span> <span class="comment">%与文字并行的图片</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%将图片单独居中插入</span></span><br><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;center&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">includegraphics</span><span class="string">[选项]</span><span class="string">&#123;图形文件&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;center&#125;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">%插入浮动图片</span></span><br><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;figure&#125;</span><span class="string">[htbp!]</span></span></span><br><span class="line"><span class="tag">\<span class="name">centering</span></span></span><br><span class="line"><span class="tag">\<span class="name">includegraphics</span><span class="string">[选项]</span><span class="string">&#123;图形文件&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">caption</span><span class="string">&#123;图片&#125;</span></span> <span class="comment">%可以在图片下方加标注并自动编号</span></span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;figure&#125;</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="输入数学公式">输入数学公式</span></h2><p>此处即makedown写法即可，<code>$a=1$</code>为<strong>行内公式</strong>，<code>$$a=1$$</code>为<strong>块级公式</strong>，具体写法参考<a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" target="_blank" rel="noopener">LaTeX/Mathematics</a></p>
+<h2><span id="插入伪代码">插入伪代码</span></h2><p>这里需要导入宏包</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;caption&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;algorithm&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;algorithmicx&#125;</span></span>  </span><br><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;algpseudocode&#125;</span></span></span><br></pre></td></tr></table></figure>
+<p>插入时则</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;algorithm&#125;</span></span>  </span><br><span class="line"><span class="tag">\<span class="name">caption</span><span class="string">&#123;算法名字&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;algorithmic&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">Require</span></span> 输入</span><br><span class="line"><span class="tag">\<span class="name">Ensure</span></span> 输出</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;algorithmic&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">State</span></span> ...</span><br><span class="line"><span class="tag">\<span class="name">For</span><span class="string">&#123;...&#125;</span></span></span><br><span class="line">	<span class="tag">\<span class="name">State</span></span> ...</span><br><span class="line"><span class="tag">\<span class="name">EndFor</span></span></span><br><span class="line"><span class="tag">\<span class="name">If</span></span></span><br><span class="line">...</span><br><span class="line"><span class="tag">\<span class="name">EndIf</span></span></span><br><span class="line"><span class="tag">\<span class="name">While</span></span></span><br><span class="line">...</span><br><span class="line"><span class="tag">\<span class="name">EndWhile</span></span></span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;algorithm&#125;</span></span></span><br></pre></td></tr></table></figure>
+<p>其中还可以对格式进行定制</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">floatname</span><span class="string">&#123;algorithm&#125;</span><span class="string">&#123;算法&#125;</span></span>  </span><br><span class="line"><span class="tag">\<span class="name">renewcommand</span><span class="string">&#123;\algorithmicrequire&#125;</span><span class="string">&#123;\textbf&#123;输入:&#125;</span></span>&#125;  </span><br><span class="line"><span class="tag">\<span class="name">renewcommand</span><span class="string">&#123;\algorithmicensure&#125;</span><span class="string">&#123;\textbf&#123;输出:&#125;</span></span>&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="插入代码">插入代码</span></h2><p>这里需要导入宏包</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;listings&#125;</span></span></span><br></pre></td></tr></table></figure>
+<p>还可以对代码进行定制</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;xcolor&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">lstset</span><span class="string">&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">    frame=none,                                          % 不显示背景边框</span></span></span><br><span class="line"><span class="tag"><span class="string">    backgroundcolor=\color[RGB]&#123;245,245,244&#125;</span></span>,            <span class="comment">% 设定背景颜色</span></span><br><span class="line">    keywordstyle=<span class="tag">\<span class="name">color</span><span class="string">[RGB]</span><span class="string">&#123;116,0,0&#125;</span></span>,                   <span class="comment">% 设定关键字颜色</span></span><br><span class="line">    commentstyle=<span class="tag">\<span class="name">it</span></span><span class="tag">\<span class="name">color</span><span class="string">[RGB]</span><span class="string">&#123;0,96,96&#125;</span></span>,                <span class="comment">% 设置代码注释的格式</span></span><br><span class="line">    stringstyle=<span class="tag">\<span class="name">rmfamily</span></span><span class="tag">\<span class="name">slshape</span></span><span class="tag">\<span class="name">color</span><span class="string">[RGB]</span><span class="string">&#123;255,153,18&#125;</span></span>,   <span class="comment">% 设置字符串格式</span></span><br><span class="line">    showstringspaces=false,                              <span class="comment">% 不显示字符串中的空格</span></span><br><span class="line">    language=c++,                                        <span class="comment">% 设置语言</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>插入代码时使用lstlisting环境即可</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;lstlisting&#125;</span></span></span><br><span class="line"></span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">int main() &#123;</span><br><span class="line">  cout &lt;&lt; "hello" &lt;&lt; endl;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;lstlisting&#125;</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="参考文献">参考文献</span></h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;thebibliography&#125;</span><span class="string">&#123;123456&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">bibitem</span><span class="string">[Knuth1]</span><span class="string">&#123;DK1&#125;</span></span> D. Knuth, T.A.O.C.P. , Vol. 1, Addison-Wesley, 1997.</span><br><span class="line"><span class="tag">\<span class="name">bibitem</span><span class="string">[Knuth2]</span><span class="string">&#123;DK2&#125;</span></span> D. Knuth, T.A.O.C.P. , Vol. 2, Addison-Wesley, 1997.</span><br><span class="line"><span class="tag">\<span class="name">bibitem</span><span class="string">[Knuth3]</span><span class="string">&#123;DK3&#125;</span></span> D. Knuth, T.A.O.C.P. , Vol. 3, Addison-Wesley, 1998.</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;thebibliography&#125;</span></span></span><br></pre></td></tr></table></figure>
+<p>中括号内为文献记号，花括号内为引用名称，至于那个123456表示我也看不懂。</p>
+<h2><span id="字体环境">字体环境</span></h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">textrm</span><span class="string">&#123;Roman Family&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">textsf</span><span class="string">&#123;Sans Serif Family&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">texttt</span><span class="string">&#123;Typewriter Family&#125;</span></span></span><br></pre></td></tr></table></figure>
+<p>花括号内为字体内容</p>
+<hr>
+<h2><span id="感谢">感谢</span></h2><p>本文内容及示例参考<a href="http://zoho.is-programmer.com/posts/30662.html" target="_blank" rel="noopener">LaTeX 排版学习笔记</a>以及<a href="http://blog.csdn.net/simple_the_best/article/details/52710830" target="_blank" rel="noopener"> LaTeX实战经验：如何插入程序代码</a>，写文章时也参考诸多博客，感谢这些博客</p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/LaTeX/">#LaTeX</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2017/10/09/逆波兰表达式应用--计算器/">逆波兰表达式应用--计算器</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-next">
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2017/10/05/LaTeX简单使用/';
+        this.page.identifier = '2017/10/05/LaTeX简单使用/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

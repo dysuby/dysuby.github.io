@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>Canny 边缘检测 - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Canny 边缘检测
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2018-10-17T00:00:00.000Z" itemprop="datePublished">10月 17 2018</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/computer-vision/">computer vision</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            9 分钟 读完 (约 1316 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <p>计算机视觉的作业，虽然完成的不好，但是还是记录下8。</p>
+<a id="more"></a> 
+<h2><span id="canny-边缘检测">Canny 边缘检测</span></h2><h3><span id="转灰度图">转灰度图</span></h3><p>当拿到一张彩色图时，为了方便之后的处理，首先要进行的是灰度图的转化，这里直接使用了 <strong>BT. 709</strong> 的灰度转化公式：$$Y′ = 0.2126 R′ + 0.7152 G′ + 0.0722 B’$$ </p>
+<h3><span id="高斯模糊">高斯模糊</span></h3><p>既然拿到了灰度图，接下来就要进行<strong>去噪处理</strong>，不然噪点会影响后面对边缘的检测，<em>Canny</em> 使用的是<strong>高斯模糊</strong>，看了算法之后感觉还是很好理解的，就是通过<strong>二维的正态分布函数</strong>计算出一个滤波器，并与原图进行<strong>卷积</strong>，刚开始没接触过卷积，觉得很高大上，但在这里卷积其实就是将<strong>邻域的点加权平均</strong>而已。</p>
+<p>大小为 $k$ 的滤波器函数：$$G(u,v)= \frac{1}{2\pi\sigma^2}\exp(-((u-k)^2-(v-k)^2)/(2\sigma^2))$$</p>
+<p>卷积：$$img(x, y)=\sum_{i=-1}^1 \sum_{j=-1}^1 img(x-i,y-j)*G(i,j)$$，此处 $G(0,0)$ 对应 $img(x,y)$</p>
+<h3><span id="计算梯度">计算梯度</span></h3><p>在我的理解中，一个点的梯度可以告诉我们这个点的<strong>变化方向和大小</strong>，如果变化足够大，便有理由认为这个点为边缘点。这里使用的是 <em>Sobel</em> 算子计算梯度，其公式为：</p>
+<p>$x$ 方向上：$$G_x=\begin{bmatrix}+1&amp;0&amp;-1\\ +2&amp;0&amp;-2\\ +1&amp;0&amp;-1\end{bmatrix} *A$$</p>
+<p>$y$ 方向上：$$G_y=\begin{bmatrix}+1&amp;+2&amp;+1\\ 0&amp;0&amp;0\\ -1&amp;-2&amp;-1\end{bmatrix} *A$$</p>
+<p>总的：$G=\sqrt{G_x^2+G_y^2}$</p>
+<h3><span id="非极大值抑制">非极大值抑制</span></h3><p>这个部分其实我也不算太理解，但是根据网上的一些资料，我认为在上一步中有一些边缘被重复检测了，而这里则要对这些边缘进行筛选，比如说一个边缘点 $E_i=(x,y)$，现在要找的 $E_{i+1}$有好几个点都满足条件，这时就要找一个最符合条件的点。<strong><em>NMS</em> 将梯度方向上的极大值点保留，而将非极大值点抑制</strong>。这里没有什么公式，只是<strong>根据梯度的方向计算出两个线性插值</strong>，以这两个插值作为比较对象进行极大值判断。这里也不好讲清楚，具体可以去看看代码。<em>（注：梯度方向垂直于边缘方向）</em></p>
+<p>权重的计算公式：$$weight=\left\vert \frac{min{gradx(x, y), grady(x,y)}}{max{gradx(x, y), grady(x, y)}}\right\vert$$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (nms(x, y) &gt; p1 &amp;&amp; nms(x, y) &gt; p2) nms(x, y) = grad(x, y);</span><br><span class="line">else nms(x, y) = 0;</span><br></pre></td></tr></table></figure>
+<h3><span id="滞后阈值">滞后阈值</span></h3><p>滞后阈值使用高低两个阈值（高阈值记为<code>th</code>，低阈值记为<code>tl</code>）来区分边缘像素，这里直接用伪代码表示出来更直观。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for point in image</span><br><span class="line">	if point &gt; th</span><br><span class="line">		point = EDGE</span><br><span class="line">	else if point &lt; tl</span><br><span class="line">		point = NOEDGE</span><br><span class="line">	else if there is any EDGE in 8-neighbourhood // 不知道八邻域怎么说</span><br><span class="line">		point = EDGE</span><br></pre></td></tr></table></figure>
+<p>这里对强边缘点和非边缘点的处理都可以理解，而对弱边缘点的处理则有点难理解，我认为强边缘点终究不是所有的边缘点，而弱边缘点便是用来<em>补充</em>强边缘点的，<strong>如果一个点的八邻域内有强边缘点，则这个点就可以被认为是一个边缘点</strong>，就好像连线一样。</p>
+<h2><span id="反思">反思</span></h2><p>这次实验作业要求我们改写并封装代码，但是由于个人水平有限，原代码的许多地方我无法理解，所以不得不参考了网上的资料以及提供的其他原代码，虽然写出来都是 <em>Canny</em> 算法，但是内容已经与我需要改写的那部分原代码差之甚远，没有满足作业的要求。</p>
+<p>在查资料和阅读原代码的过程中，我也收获了很多，例如我刚开始并不知道高斯模糊为什么叫高斯模糊，它究竟是个什么原理，但是自己写了一遍之后便发现，原来使用的是正太分布，原理也如此简单。直到现在，我感觉我对这个算法也有了一定的了解，但却也谈不上掌握，因为我并不知道 <em>Canny</em> 相较于其他算法有何差别。</p>
+<p>Canny 算法在我看来并不难理解，因为它的每一步的目的都很清晰，从去噪到求梯度再到区分筛选，都有理可循，但是我可能是学识尚浅，并不能在细节上区分实现不同导致的效果好坏，看同学的实现效果似乎也与自己有些差别，深知自己需要学习的还有很多。</p>
+<h2><span id="参考资料">参考资料</span></h2><p><del>明明看的都是中文 wiki 却要放英文 wiki</del></p>
+<p><a href="https://en.wikipedia.org/wiki/Grayscale" target="_blank" rel="noopener">Grayscale</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Canny_edge_detector" target="_blank" rel="noopener">Canny edge detector</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Sobel_operator" target="_blank" rel="noopener">Sobel operator</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Gaussian_blur" target="_blank" rel="noopener">Gaussian blur</a></p>
+<p><a href="https://blog.csdn.net/kezunhai/article/details/11620357" target="_blank" rel="noopener">Canny算子中的非极大值抑制（Non-Maximum Suppression）分析</a></p>
+<p>以及其他一些博客。</p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/homework/">#homework</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/computer-vision/">#computer vision</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/note/">#note</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/canny/">#canny</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2018/10/18/【week7】11. Container With Most Water 解题报告/">【week7】11. Container With Most Water</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2018/10/13/【week6】322. Coin Change 解题报告/">【week6】322. Coin Change</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2018/10/17/Canny 边缘检测/';
+        this.page.identifier = '2018/10/17/Canny 边缘检测/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>

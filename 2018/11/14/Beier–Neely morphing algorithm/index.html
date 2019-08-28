@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+<title>Beier–Neely morphing algorithm - 摸鱼一刻</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Vegchic
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item " href="/archives">Archives</a>
+            
+            <a class="navbar-item " href="/tags">Tag</a>
+            
+            <a class="navbar-item " href="/categories">Category</a>
+            
+            <a class="navbar-item " href="/about">About</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜索" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" href="https://github.com/vegchic">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope="" itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            Beier–Neely morphing algorithm
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        <span class="column is-narrow">
+            <time datetime="2018-11-14T00:00:00.000Z" itemprop="datePublished">11月 14 2018</time>
+        </span>
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/computer-vision/">computer vision</a>
+        </span>
+        
+        
+        <span class="column is-narrow">
+            
+            
+            5 分钟 读完 (约 699 字)
+        </span>
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <p><a href="http://cognitrn.psych.indiana.edu/busey/morph.pdf" target="_blank" rel="noopener">Beier–Neely morphing algorithm</a></p>
+<a id="more"></a>
+<h2><span id="算法原理">算法原理</span></h2><p>主要算法流程如下：</p>
+<p><img src="/images/morphing/algorithm.jpg" alt=""></p>
+<p>因为有是生成中间帧，所以目标图是每一张中间帧，而原图为输入图像。为避免歧义，将输入图像称为 $src$ 和 $dst$。</p>
+<p>简单地说，对于中间帧的每一个像素 $X$ ，对于每一条特征线，计算 $X$ 在 $src$ 和 $dst$ 基于该特征线的映射，然后加权平均算出最终在两图的映射 $X’$。然后使用 <em>Bilinear</em> 插值求出两个 $X’$ 的像素值，再加权平均求得 $X$ 最终的像素值。</p>
+<h3><span id="生成中间帧特征线">生成中间帧特征线</span></h3><p>这里根据帧数计算权重作 $src$ 和 $dst$ 特征线对的插值。设 $s$ 为特征线的起点，$e$ 为特征线的终点，则</p>
+<p>$$ratio=i/n,i=1,\dots,n$$</p>
+<p>$$s’=s_{src}\cdot(1-ratio)+s_{dst} \cdot ratio$$</p>
+<p>$$e’=e_{src}\cdot(1-ratio)+e_{dst} \cdot ratio$$</p>
+<h3><span id="计算-x">计算 $X’$</span></h3><p><img src="/images/morphing/multi-line.jpg" alt=""></p>
+<p>由上图可见，主要是通过 $X$ 在目标图中相对于特征线（向量）的位置，映射回原图对应特征线相对的位置。这个位置由 $X$ 在特征线上的<strong>投影和距离</strong>决定。</p>
+<p>$$u=\frac{(X-P)\cdot(Q-P)}{||Q-P||^2}$$</p>
+<p>$$v=\frac{(X-P)\cdot Perpendicular(Q-P)}{||Q-P||}$$</p>
+<p>$$X’=P’+u\cdot(Q’-P’)+\frac{v\cdot Perpendicular(Q’-P’)}{||Q’-P’||}$$</p>
+<h3><span id="x-的加权平均">$X’$ 的加权平均</span></h3><p>通过下面的权重公式计算每一条特征线在当前 $X$ 中占的权重：</p>
+<p>$$weight=( \frac{length^p}{a+dis})^b$$</p>
+<p>其中 $a,b,p$ 为参数，我取的是 $1,2,0$，即权重与特征线的长度无关。</p>
+<p>然后加到一个总的 $xsum$ 和 $weightsum$ 上</p>
+<p>$$xsum =xsum+ X’ \cdot weight$$</p>
+<p>$$weightsum=weightsum+weight$$</p>
+<p>当所有特征线都遍历过后，就可以求出最终的 $X’$</p>
+<p>$$X’=xsum/weightsum$$</p>
+<h3><span id="bilinear"><em>Bilinear</em></span></h3><p>这里是通过映射得到的 $X’$ 获得对应的 <em>rgb</em>。借用课件的图：</p>
+<p><img src="/images/morphing/bilinear.png" alt=""></p>
+<p>假设绿点为 $(x,y)$，对应的像素值为 $S(x,y)$，则有</p>
+<p>$$S(x,y)=(1-a)\cdot(1-b)\cdot S(i,j)+a\cdot(1-b)\cdot S(i+1,j)+(1-a)\cdot b\cdot S(i,j+1)+a\cdot b\cdot S(i+1,j+1)$$</p>
+<p>容易看出，这样插值当 $(x,y)$ 为任意一个顶点时，像素值即是该点的值。</p>
+<h3><span id="像素值加权平均">像素值加权平均</span></h3><p>在求得 $src$ 和 $dst$ 的像素值 $s_1,s_2$ 后，设当前帧数为 $i$，总帧数为 $n$ 。则 $X$ 的像素值为</p>
+<p>$$s_x=s_1\cdot (1-\frac{i}{n})+s_2\cdot \frac{i}{n},i=1,\cdots, n$$</p>
+<p>通过上面的算法步骤即可获得 <em>Morphing</em> 的中间帧。当然，在运行上面算法时还要自己标出特征线。</p>
+<h2><span id="效果">效果</span></h2><p><img src="/images/morphing/res.gif" alt=""></p>
+<h2><span id="参考">参考</span></h2><p><a href="https://www.csie.ntu.edu.tw/~b97074/vfx_html/hw1.html" target="_blank" rel="noopener">DIGITAL VISUAL EFFECTS</a></p>
+
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/homework/">#homework</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/computer-vision/">#computer vision</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/note/">#note</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/morphing/">#morphing</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/2018/11/19/【week12】452. Minimum Number of Arrows to Burst Balloons 解题报告/">【week12】452. Minimum Number of Arrows to Burst Balloons 解题报告</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/2018/11/12/【week11】456. 132 Pattern 解题报告/">【week11】456. 132 Pattern 解题报告</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+
+
+<div class="comments">
+    <h3 class="title is-4">评论</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://vegchic.github.io/2018/11/14/Beier–Neely morphing algorithm/';
+        this.page.identifier = '2018/11/14/Beier–Neely morphing algorithm/';
+        
+        this.language = 'zh';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'vegchic-github-io' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2019 vegchic&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" href="https://github.com/ppoffice/hexo-theme-minos">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-CN");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+</script>
+
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+
+    
+
+
+<script src="/js/script.js"></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站内搜索">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+    
+</body>
+</html>
